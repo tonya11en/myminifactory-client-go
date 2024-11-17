@@ -1,0 +1,2462 @@
+openapi: 3.0.1
+info:
+  description: 3D printable object API
+  title: MyMiniFactory API
+  version: "2"
+servers:
+- url: https://www.myminifactory.com/api/v2
+paths:
+  /search:
+    get:
+      description: Give search results according the the query. Searches objects by
+        default.
+      parameters:
+      - description: Search query. See the details query syntax document
+        in: query
+        name: q
+        required: true
+        schema:
+          type: string
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      - description: "Sort results by: 'visits', 'date', 'popularity'."
+        in: query
+        name: sort
+        schema:
+          type: string
+      - description: "Sorting order: 'desc', 'asc' (Defaults to desc)."
+        in: query
+        name: order
+        schema:
+          type: string
+      - description: "Filter object of a certain category, by the category id. eg.\
+          \ cat={category_id}"
+        in: query
+        name: cat
+        schema:
+          type: string
+      - description: "Filter printing support-free objects: 1: support-free"
+        in: query
+        name: support
+        schema:
+          type: string
+      - description: "Filter printing technology recommanded for the object: eg. 'DLP/SLA'"
+        in: query
+        name: tech
+        schema:
+          type: string
+      - description: "Filter object difficulty (How hard to build) : 'eas', 'med',\
+          \ 'diff'"
+        in: query
+        name: complexity
+        schema:
+          type: string
+      - description: "Filter featured object: 0: Non-featured, 1: featured"
+        in: query
+        name: featured
+        schema:
+          type: string
+      - description: "License filter: the designer accepted his object the remixed."
+        in: query
+        name: remix
+        schema:
+          type: string
+      - description: "License filter: the designer accepted commercial use of his\
+          \ object."
+        in: query
+        name: commercial_use
+        schema:
+          type: string
+      - description: "License filter: this object should be shared exclusivly on MyMiniFactory."
+        in: query
+        name: exclusive
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_search_get_200_response'
+          description: List of requested items
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Search
+  /user:
+    get:
+      description: Get the current user basic information.
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User object
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      tags:
+      - Users
+  /users/{username}:
+    get:
+      description: Get basic information about a user.
+      parameters:
+      - description: The user's username
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: The user information
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Users
+  /users/{username}/following:
+    get:
+      description: Get a user's followings.
+      parameters:
+      - description: The user's username
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_users__username__following_get_200_response'
+          description: List of users
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Users
+  /users/{username}/followers:
+    get:
+      description: Get a user's followers.
+      parameters:
+      - description: The user's username
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_users__username__following_get_200_response'
+          description: List of users
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Users
+  /users/{username}/objects:
+    get:
+      description: Get a user's objects.
+      parameters:
+      - description: The user's username
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Objects'
+          description: List of objects
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Users
+      - Objects
+  /users/{username}/objects_liked:
+    get:
+      description: Get a user's liked objects.
+      parameters:
+      - description: The user's username
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_search_get_200_response'
+          description: List of objects
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Users
+      - Objects
+  /users/{username}/collections:
+    get:
+      description: Get a user's collections.
+      parameters:
+      - description: The user's username
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_users__username__collections_get_200_response'
+          description: List of collections
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Users
+      - Objects
+      - Collections
+  /users/{username}/collections/{collection_slug}:
+    get:
+      description: Get a user's collections.
+      parameters:
+      - description: The user's username
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      - description: The collection slug name
+        in: path
+        name: collection_slug
+        required: true
+        schema:
+          type: string
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+          description: The collection information and its objects
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Users
+  /objects/{object_id}:
+    get:
+      description: Get information about an object.
+      parameters:
+      - description: The object identifier number
+        in: path
+        name: object_id
+        required: true
+        schema:
+          type: number
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+          description: The 3D object object
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Objects
+  /objects/{object_id}/files:
+    get:
+      description: Get the list of files of the object.
+      parameters:
+      - description: The object identifier number
+        in: path
+        name: object_id
+        required: true
+        schema:
+          type: number
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_objects__object_id__files_get_200_response'
+          description: List of files of the object
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Objects
+      - Files
+  /objects/{object_id}/prints:
+    get:
+      description: Get the list of prints of the object.
+      parameters:
+      - description: The object identifier number
+        in: path
+        name: object_id
+        required: true
+        schema:
+          type: number
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_objects__object_id__prints_get_200_response'
+          description: The 3D file information
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Objects
+      - Prints
+  /objects/{object_id}/upload_status:
+    get:
+      description: Check the status of an object and its files.
+      parameters:
+      - description: The object identifier number
+        in: path
+        name: object_id
+        required: true
+        schema:
+          type: number
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObjectUploadStatus'
+          description: Object
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      tags:
+      - Objects
+      - Upload
+  /object:
+    patch:
+      description: Sent object metadata.
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/ObjectPatchMetadata'
+        description: Edit the fields of an object. Must be the owner.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObjectUpload'
+          description: The 3D object object
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      tags:
+      - Objects
+      - Upload
+      x-codegen-request-body-name: patch_metadata
+    post:
+      description: Sent object metadata.
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/ObjectMetadata'
+        description: Metadata for submitting a for object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObjectUpload'
+          description: The 3D object object
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      tags:
+      - Objects
+      - Upload
+      x-codegen-request-body-name: metadata
+  /files/{file_id}:
+    get:
+      description: Information of a file including the download link
+      parameters:
+      - description: The file identifier number
+        in: path
+        name: file_id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+          description: Information of a file including the download link
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      - key: []
+      tags:
+      - Objects
+  /file:
+    post:
+      description: Upload a file
+      parameters:
+      - description: Temporary identifier to upload a file
+        in: query
+        name: upload_id
+        required: true
+        schema:
+          type: string
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_file_post_201_response'
+          description: file created
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      tags:
+      - Files
+      - Upload
+  /image:
+    post:
+      description: Upload an image
+      parameters:
+      - description: Temporary identifier to upload a file
+        in: query
+        name: upload_id
+        required: true
+        schema:
+          type: string
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_file_post_201_response'
+          description: image created
+      security:
+      - oauth_authorization_code:
+        - basic
+      - oauth_implicit:
+        - basic
+      tags:
+      - Files
+      - Upload
+  /collections:
+    get:
+      description: Get all the public collections
+      parameters:
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_users__username__collections_get_200_response'
+          description: The collection information
+      tags:
+      - Collections
+  /collections/{collection_id}:
+    get:
+      description: Get information about a collection.
+      parameters:
+      - description: The collection identifier number
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          type: string
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+          description: The collection information and its objects
+      tags:
+      - Collections
+  /categories:
+    get:
+      description: Get information about a category.
+      parameters:
+      - description: Filter top categories
+        in: query
+        name: top
+        schema:
+          type: boolean
+      - description: Page number. Default is 1
+        in: query
+        name: page
+        schema:
+          type: string
+      - description: Number of results per page. Default is 20
+        in: query
+        name: per_page
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_categories_get_200_response'
+          description: The category information and its children
+      tags:
+      - Categories
+  /categories/{category_id}:
+    get:
+      description: Get information about a category.
+      parameters:
+      - description: The category identifier number
+        in: path
+        name: category_id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: The category information and its children
+      tags:
+      - Categories
+components:
+  parameters:
+    q:
+      description: Search query. See the details query syntax document
+      in: query
+      name: q
+      required: true
+      schema:
+        type: string
+    page:
+      description: Page number. Default is 1
+      in: query
+      name: page
+      schema:
+        type: string
+    per_page:
+      description: Number of results per page. Default is 20
+      in: query
+      name: per_page
+      schema:
+        type: string
+    sort:
+      description: "Sort results by: 'visits', 'date', 'popularity'."
+      in: query
+      name: sort
+      schema:
+        type: string
+    order:
+      description: "Sorting order: 'desc', 'asc' (Defaults to desc)."
+      in: query
+      name: order
+      schema:
+        type: string
+    featured:
+      description: "Filter featured object: 0: Non-featured, 1: featured"
+      in: query
+      name: featured
+      schema:
+        type: string
+    support:
+      description: "Filter printing support-free objects: 1: support-free"
+      in: query
+      name: support
+      schema:
+        type: string
+    cat:
+      description: "Filter object of a certain category, by the category id. eg. cat={category_id}"
+      in: query
+      name: cat
+      schema:
+        type: string
+    complexity:
+      description: "Filter object difficulty (How hard to build) : 'eas', 'med', 'diff'"
+      in: query
+      name: complexity
+      schema:
+        type: string
+    tech:
+      description: "Filter printing technology recommanded for the object: eg. 'DLP/SLA'"
+      in: query
+      name: tech
+      schema:
+        type: string
+    remix:
+      description: "License filter: the designer accepted his object the remixed."
+      in: query
+      name: remix
+      schema:
+        type: string
+    commercial_use:
+      description: "License filter: the designer accepted commercial use of his object."
+      in: query
+      name: commercial_use
+      schema:
+        type: string
+    exclusive:
+      description: "License filter: this object should be shared exclusivly on MyMiniFactory."
+      in: query
+      name: exclusive
+      schema:
+        type: string
+    access_token:
+      description: API Access token
+      in: query
+      name: access_token
+      required: true
+      schema:
+        type: string
+    username:
+      description: The user's username
+      in: path
+      name: username
+      required: true
+      schema:
+        type: string
+    object_id:
+      description: The object identifier number
+      in: path
+      name: object_id
+      required: true
+      schema:
+        type: number
+    file_id:
+      description: The file identifier number
+      in: path
+      name: file_id
+      required: true
+      schema:
+        type: string
+    upload_id:
+      description: Temporary identifier to upload a file
+      in: query
+      name: upload_id
+      required: true
+      schema:
+        type: string
+    collection_id:
+      description: The collection identifier number
+      in: path
+      name: collection_id
+      required: true
+      schema:
+        type: string
+    collection_slug:
+      description: The collection slug name
+      in: path
+      name: collection_slug
+      required: true
+      schema:
+        type: string
+    category_id:
+      description: The category identifier number
+      in: path
+      name: category_id
+      required: true
+      schema:
+        type: string
+    top_category:
+      description: Filter top categories
+      in: query
+      name: top
+      schema:
+        type: boolean
+  requestBodies:
+    object_metadata:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ObjectMetadata'
+      description: Metadata for submitting a for object
+      required: true
+    object_patch_metadata:
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ObjectPatchMetadata'
+      description: Edit the fields of an object. Must be the owner.
+      required: true
+  schemas:
+    User:
+      example:
+        website: website
+        avatar_url: avatar_url
+        profile_url: profile_url
+        avatar_thumbnail_url: avatar_thumbnail_url
+        name: name
+        bio: bio
+        username: username
+      properties:
+        username:
+          type: string
+        name:
+          type: string
+        profile_url:
+          type: string
+        avatar_url:
+          type: string
+        avatar_thumbnail_url:
+          type: string
+        bio:
+          type: string
+        website:
+          type: string
+      type: object
+    Objects:
+      example:
+        total_count: 0
+        items:
+        - "{}"
+        - "{}"
+      properties:
+        total_count:
+          type: integer
+        items:
+          items:
+            type: object
+          type: array
+      type: object
+    Object:
+      example:
+        archive_download_url: archive_download_url
+        complexity: 2
+        featured: featured
+        images:
+        - standard:
+            width: width
+            url: url
+            height: height
+          thumbnail:
+            width: width
+            url: url
+            height: height
+          original:
+            width: width
+            url: url
+            height: height
+          is_primary: true
+          id: 7
+        - standard:
+            width: width
+            url: url
+            height: height
+          thumbnail:
+            width: width
+            url: url
+            height: height
+          original:
+            width: width
+            url: url
+            height: height
+          is_primary: true
+          id: 7
+        visibility: visibility
+        description: description
+        designer:
+          website: website
+          avatar_url: avatar_url
+          profile_url: profile_url
+          avatar_thumbnail_url: avatar_thumbnail_url
+          name: name
+          bio: bio
+          username: username
+        url: url
+        material_quantity: material_quantity
+        tags:
+        - tags
+        - tags
+        licenses:
+        - type: type
+          value: true
+        - type: type
+          value: true
+        parent_id: 1
+        name: name
+        files:
+        - filename: filename
+          size: size
+          download_url: download_url
+          description: description
+          id: 9
+          thumbnail_url: thumbnail_url
+        - filename: filename
+          size: size
+          download_url: download_url
+          description: description
+          id: 9
+          thumbnail_url: thumbnail_url
+        id: 6
+        categories:
+        - parent:
+            name: name
+            id: 4
+            slug: slug
+          children:
+            total_count: 2
+            items:
+            - name: name
+              id: 4
+              slug: slug
+            - name: name
+              id: 4
+              slug: slug
+          name: name
+          id: 3
+          slug: slug
+          url: url
+        - parent:
+            name: name
+            id: 4
+            slug: slug
+          children:
+            total_count: 2
+            items:
+            - name: name
+              id: 4
+              slug: slug
+            - name: name
+              id: 4
+              slug: slug
+          name: name
+          id: 3
+          slug: slug
+          url: url
+        published_at: published_at
+        views: 5
+        likes: 5
+        dimensions: dimensions
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        archive_download_url:
+          description: Available ONLY with Oauth connected User. Not with API key.
+          type: string
+        parent_id:
+          type: integer
+        name:
+          type: string
+        visibility:
+          description: "0: Private, 2: Public"
+          type: string
+        description:
+          type: string
+        views:
+          type: integer
+        likes:
+          type: integer
+        published_at:
+          description: The value is specified in ISO 8601 (YYYY-MM-DDThh:mm:ss.sZ)
+            format.
+          type: string
+        featured:
+          type: string
+        complexity:
+          type: integer
+        dimensions:
+          type: string
+        material_quantity:
+          type: string
+        designer:
+          $ref: '#/components/schemas/User'
+        images:
+          items:
+            $ref: '#/components/schemas/Image'
+          type: array
+        files:
+          items:
+            $ref: '#/components/schemas/File'
+          type: array
+        categories:
+          items:
+            $ref: '#/components/schemas/OneCategory'
+          type: array
+        tags:
+          items:
+            type: string
+          type: array
+        licenses:
+          items:
+            $ref: '#/components/schemas/License'
+          type: array
+      type: object
+    File:
+      example:
+        filename: filename
+        size: size
+        download_url: download_url
+        description: description
+        id: 9
+        thumbnail_url: thumbnail_url
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        description:
+          type: string
+        download_url:
+          description: Available ONLY with Oauth connected User. Not with API key.
+          type: string
+        thumbnail_url:
+          type: string
+        size:
+          type: string
+      type: object
+    Print:
+      example:
+        standard:
+          width: width
+          url: url
+          height: height
+        thumbnail:
+          width: width
+          url: url
+          height: height
+        original:
+          width: width
+          url: url
+          height: height
+        id: 6
+      properties:
+        id:
+          type: integer
+        original:
+          $ref: '#/components/schemas/Print_original'
+        thumbnail:
+          $ref: '#/components/schemas/Print_original'
+        standard:
+          $ref: '#/components/schemas/Print_original'
+      type: object
+    Image:
+      example:
+        standard:
+          width: width
+          url: url
+          height: height
+        thumbnail:
+          width: width
+          url: url
+          height: height
+        original:
+          width: width
+          url: url
+          height: height
+        is_primary: true
+        id: 7
+      properties:
+        id:
+          type: integer
+        is_primary:
+          type: boolean
+        original:
+          $ref: '#/components/schemas/Print_original'
+        thumbnail:
+          $ref: '#/components/schemas/Print_original'
+        standard:
+          $ref: '#/components/schemas/Print_original'
+      type: object
+    Collection:
+      example:
+        owner:
+          website: website
+          avatar_url: avatar_url
+          profile_url: profile_url
+          avatar_thumbnail_url: avatar_thumbnail_url
+          name: name
+          bio: bio
+          username: username
+        featured: true
+        public: true
+        objects:
+          total_count: 0
+          items:
+          - "{}"
+          - "{}"
+        name: name
+        created_at: created_at
+        description: description
+        cover_object:
+          archive_download_url: archive_download_url
+          complexity: 2
+          featured: featured
+          images:
+          - standard:
+              width: width
+              url: url
+              height: height
+            thumbnail:
+              width: width
+              url: url
+              height: height
+            original:
+              width: width
+              url: url
+              height: height
+            is_primary: true
+            id: 7
+          - standard:
+              width: width
+              url: url
+              height: height
+            thumbnail:
+              width: width
+              url: url
+              height: height
+            original:
+              width: width
+              url: url
+              height: height
+            is_primary: true
+            id: 7
+          visibility: visibility
+          description: description
+          designer:
+            website: website
+            avatar_url: avatar_url
+            profile_url: profile_url
+            avatar_thumbnail_url: avatar_thumbnail_url
+            name: name
+            bio: bio
+            username: username
+          url: url
+          material_quantity: material_quantity
+          tags:
+          - tags
+          - tags
+          licenses:
+          - type: type
+            value: true
+          - type: type
+            value: true
+          parent_id: 1
+          name: name
+          files:
+          - filename: filename
+            size: size
+            download_url: download_url
+            description: description
+            id: 9
+            thumbnail_url: thumbnail_url
+          - filename: filename
+            size: size
+            download_url: download_url
+            description: description
+            id: 9
+            thumbnail_url: thumbnail_url
+          id: 6
+          categories:
+          - parent:
+              name: name
+              id: 4
+              slug: slug
+            children:
+              total_count: 2
+              items:
+              - name: name
+                id: 4
+                slug: slug
+              - name: name
+                id: 4
+                slug: slug
+            name: name
+            id: 3
+            slug: slug
+            url: url
+          - parent:
+              name: name
+              id: 4
+              slug: slug
+            children:
+              total_count: 2
+              items:
+              - name: name
+                id: 4
+                slug: slug
+              - name: name
+                id: 4
+                slug: slug
+            name: name
+            id: 3
+            slug: slug
+            url: url
+          published_at: published_at
+          views: 5
+          likes: 5
+          dimensions: dimensions
+        id: 0
+        slug: slug
+        url: url
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        url:
+          type: string
+        owner:
+          $ref: '#/components/schemas/User'
+        featured:
+          type: boolean
+        public:
+          type: boolean
+        created_at:
+          description: The value is specified in ISO 8601 (YYYY-MM-DDThh:mm:ss.sZ)
+            format.
+          type: string
+        description:
+          type: string
+        cover_object:
+          $ref: '#/components/schemas/Object'
+        objects:
+          $ref: '#/components/schemas/Objects'
+      type: object
+    OneCollection:
+      example:
+        owner:
+          website: website
+          avatar_url: avatar_url
+          profile_url: profile_url
+          avatar_thumbnail_url: avatar_thumbnail_url
+          name: name
+          bio: bio
+          username: username
+        featured: true
+        public: true
+        name: name
+        created_at: created_at
+        description: description
+        cover_object:
+          archive_download_url: archive_download_url
+          complexity: 2
+          featured: featured
+          images:
+          - standard:
+              width: width
+              url: url
+              height: height
+            thumbnail:
+              width: width
+              url: url
+              height: height
+            original:
+              width: width
+              url: url
+              height: height
+            is_primary: true
+            id: 7
+          - standard:
+              width: width
+              url: url
+              height: height
+            thumbnail:
+              width: width
+              url: url
+              height: height
+            original:
+              width: width
+              url: url
+              height: height
+            is_primary: true
+            id: 7
+          visibility: visibility
+          description: description
+          designer:
+            website: website
+            avatar_url: avatar_url
+            profile_url: profile_url
+            avatar_thumbnail_url: avatar_thumbnail_url
+            name: name
+            bio: bio
+            username: username
+          url: url
+          material_quantity: material_quantity
+          tags:
+          - tags
+          - tags
+          licenses:
+          - type: type
+            value: true
+          - type: type
+            value: true
+          parent_id: 1
+          name: name
+          files:
+          - filename: filename
+            size: size
+            download_url: download_url
+            description: description
+            id: 9
+            thumbnail_url: thumbnail_url
+          - filename: filename
+            size: size
+            download_url: download_url
+            description: description
+            id: 9
+            thumbnail_url: thumbnail_url
+          id: 6
+          categories:
+          - parent:
+              name: name
+              id: 4
+              slug: slug
+            children:
+              total_count: 2
+              items:
+              - name: name
+                id: 4
+                slug: slug
+              - name: name
+                id: 4
+                slug: slug
+            name: name
+            id: 3
+            slug: slug
+            url: url
+          - parent:
+              name: name
+              id: 4
+              slug: slug
+            children:
+              total_count: 2
+              items:
+              - name: name
+                id: 4
+                slug: slug
+              - name: name
+                id: 4
+                slug: slug
+            name: name
+            id: 3
+            slug: slug
+            url: url
+          published_at: published_at
+          views: 5
+          likes: 5
+          dimensions: dimensions
+        id: 6
+        slug: slug
+        url: url
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        url:
+          type: string
+        owner:
+          $ref: '#/components/schemas/User'
+        featured:
+          type: boolean
+        public:
+          type: boolean
+        created_at:
+          description: The value is specified in ISO 8601 (YYYY-MM-DDThh:mm:ss.sZ)
+            format.
+          type: string
+        description:
+          type: string
+        cover_object:
+          $ref: '#/components/schemas/Object'
+      type: object
+    Category:
+      example:
+        parent:
+          name: name
+          id: 4
+          slug: slug
+        children:
+          total_count: 2
+          items:
+          - name: name
+            id: 4
+            slug: slug
+          - name: name
+            id: 4
+            slug: slug
+        objects:
+          total_count: 0
+          items:
+          - "{}"
+          - "{}"
+        name: name
+        id: 6
+        slug: slug
+        url: url
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        url:
+          type: string
+        name:
+          type: string
+        children:
+          $ref: '#/components/schemas/Category_children'
+        parent:
+          $ref: '#/components/schemas/Category_children_items_inner'
+        objects:
+          $ref: '#/components/schemas/Objects'
+      type: object
+    OneCategory:
+      example:
+        parent:
+          name: name
+          id: 4
+          slug: slug
+        children:
+          total_count: 2
+          items:
+          - name: name
+            id: 4
+            slug: slug
+          - name: name
+            id: 4
+            slug: slug
+        name: name
+        id: 3
+        slug: slug
+        url: url
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        url:
+          type: string
+        name:
+          type: string
+        children:
+          $ref: '#/components/schemas/Category_children'
+        parent:
+          $ref: '#/components/schemas/Category_children_items_inner'
+      type: object
+    ObjectMetadata:
+      example:
+        client_url: client_url
+        how_to: how_to
+        filament_quantity: filament_quantity
+        images:
+        - filename: filename
+          size: 5
+        - filename: filename
+          size: 5
+        visibility: 0
+        time_to_do_from: 6
+        description: description
+        tags: tags
+        licenses:
+        - type: type
+          value: true
+        - type: type
+          value: true
+        time_to_do_to: 1
+        support_free: true
+        name: name
+        files:
+        - filename: filename
+          size: 5
+        - filename: filename
+          size: 5
+        dimensions: dimensions
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        visibility:
+          description: "2: Public, 0: Private"
+          type: integer
+        how_to:
+          type: string
+        dimensions:
+          type: string
+        time_to_do_from:
+          type: integer
+        time_to_do_to:
+          type: integer
+        support_free:
+          type: boolean
+        filament_quantity:
+          type: string
+        client_url:
+          type: string
+        tags:
+          type: string
+        licenses:
+          items:
+            $ref: '#/components/schemas/License'
+          type: array
+        files:
+          items:
+            $ref: '#/components/schemas/FileUploadRequest'
+          type: array
+        images:
+          items:
+            $ref: '#/components/schemas/ImageUploadRequest'
+          type: array
+      type: object
+    ObjectPatchMetadata:
+      example:
+        visibility: 0
+      properties:
+        visibility:
+          description: "2: Public, 0: Private"
+          type: integer
+      type: object
+    ObjectUpload:
+      example:
+        images:
+        - upload_id: upload_id
+          filename: filename
+        - upload_id: upload_id
+          filename: filename
+        object_url: object_url
+        name: name
+        files:
+        - upload_id: upload_id
+          filename: filename
+        - upload_id: upload_id
+          filename: filename
+        id: 0
+        object_status_url: object_status_url
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        object_status_url:
+          type: string
+        object_url:
+          type: string
+        files:
+          items:
+            $ref: '#/components/schemas/FileUploadId'
+          type: array
+        images:
+          items:
+            $ref: '#/components/schemas/ImageUploadId'
+          type: array
+      type: object
+    ObjectUploadStatus:
+      example:
+        images:
+        - upload_id: upload_id
+          filename: filename
+          status: status
+        - upload_id: upload_id
+          filename: filename
+          status: status
+        name: name
+        files:
+        - upload_id: upload_id
+          filename: filename
+          status: status
+        - upload_id: upload_id
+          filename: filename
+          status: status
+        id: 0
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        files:
+          items:
+            $ref: '#/components/schemas/FileUploadStatus'
+          type: array
+        images:
+          items:
+            $ref: '#/components/schemas/ImageUploadStatus'
+          type: array
+      type: object
+    FileUploadRequest:
+      example:
+        filename: filename
+        size: 5
+      properties:
+        filename:
+          type: string
+        size:
+          type: integer
+      type: object
+    ImageUploadRequest:
+      example:
+        filename: filename
+        size: 5
+      properties:
+        filename:
+          type: string
+        size:
+          type: integer
+      type: object
+    FileUploadStatus:
+      example:
+        upload_id: upload_id
+        filename: filename
+        status: status
+      properties:
+        upload_id:
+          type: string
+        filename:
+          type: string
+        status:
+          type: string
+      type: object
+    ImageUploadStatus:
+      example:
+        upload_id: upload_id
+        filename: filename
+        status: status
+      properties:
+        upload_id:
+          type: string
+        filename:
+          type: string
+        status:
+          type: string
+      type: object
+    FileUploadId:
+      example:
+        upload_id: upload_id
+        filename: filename
+      properties:
+        upload_id:
+          type: string
+        filename:
+          type: string
+      type: object
+    ImageUploadId:
+      example:
+        upload_id: upload_id
+        filename: filename
+      properties:
+        upload_id:
+          type: string
+        filename:
+          type: string
+      type: object
+    License:
+      example:
+        type: type
+        value: true
+      properties:
+        type:
+          description: "Possible values are: 'mention', 'remix', 'commercial-use',\
+            \ 'exclusivity'"
+          type: string
+        value:
+          type: boolean
+      type: object
+    _search_get_200_response:
+      example:
+        total_count: 0
+        items:
+        - archive_download_url: archive_download_url
+          complexity: 2
+          featured: featured
+          images:
+          - standard:
+              width: width
+              url: url
+              height: height
+            thumbnail:
+              width: width
+              url: url
+              height: height
+            original:
+              width: width
+              url: url
+              height: height
+            is_primary: true
+            id: 7
+          - standard:
+              width: width
+              url: url
+              height: height
+            thumbnail:
+              width: width
+              url: url
+              height: height
+            original:
+              width: width
+              url: url
+              height: height
+            is_primary: true
+            id: 7
+          visibility: visibility
+          description: description
+          designer:
+            website: website
+            avatar_url: avatar_url
+            profile_url: profile_url
+            avatar_thumbnail_url: avatar_thumbnail_url
+            name: name
+            bio: bio
+            username: username
+          url: url
+          material_quantity: material_quantity
+          tags:
+          - tags
+          - tags
+          licenses:
+          - type: type
+            value: true
+          - type: type
+            value: true
+          parent_id: 1
+          name: name
+          files:
+          - filename: filename
+            size: size
+            download_url: download_url
+            description: description
+            id: 9
+            thumbnail_url: thumbnail_url
+          - filename: filename
+            size: size
+            download_url: download_url
+            description: description
+            id: 9
+            thumbnail_url: thumbnail_url
+          id: 6
+          categories:
+          - parent:
+              name: name
+              id: 4
+              slug: slug
+            children:
+              total_count: 2
+              items:
+              - name: name
+                id: 4
+                slug: slug
+              - name: name
+                id: 4
+                slug: slug
+            name: name
+            id: 3
+            slug: slug
+            url: url
+          - parent:
+              name: name
+              id: 4
+              slug: slug
+            children:
+              total_count: 2
+              items:
+              - name: name
+                id: 4
+                slug: slug
+              - name: name
+                id: 4
+                slug: slug
+            name: name
+            id: 3
+            slug: slug
+            url: url
+          published_at: published_at
+          views: 5
+          likes: 5
+          dimensions: dimensions
+        - archive_download_url: archive_download_url
+          complexity: 2
+          featured: featured
+          images:
+          - standard:
+              width: width
+              url: url
+              height: height
+            thumbnail:
+              width: width
+              url: url
+              height: height
+            original:
+              width: width
+              url: url
+              height: height
+            is_primary: true
+            id: 7
+          - standard:
+              width: width
+              url: url
+              height: height
+            thumbnail:
+              width: width
+              url: url
+              height: height
+            original:
+              width: width
+              url: url
+              height: height
+            is_primary: true
+            id: 7
+          visibility: visibility
+          description: description
+          designer:
+            website: website
+            avatar_url: avatar_url
+            profile_url: profile_url
+            avatar_thumbnail_url: avatar_thumbnail_url
+            name: name
+            bio: bio
+            username: username
+          url: url
+          material_quantity: material_quantity
+          tags:
+          - tags
+          - tags
+          licenses:
+          - type: type
+            value: true
+          - type: type
+            value: true
+          parent_id: 1
+          name: name
+          files:
+          - filename: filename
+            size: size
+            download_url: download_url
+            description: description
+            id: 9
+            thumbnail_url: thumbnail_url
+          - filename: filename
+            size: size
+            download_url: download_url
+            description: description
+            id: 9
+            thumbnail_url: thumbnail_url
+          id: 6
+          categories:
+          - parent:
+              name: name
+              id: 4
+              slug: slug
+            children:
+              total_count: 2
+              items:
+              - name: name
+                id: 4
+                slug: slug
+              - name: name
+                id: 4
+                slug: slug
+            name: name
+            id: 3
+            slug: slug
+            url: url
+          - parent:
+              name: name
+              id: 4
+              slug: slug
+            children:
+              total_count: 2
+              items:
+              - name: name
+                id: 4
+                slug: slug
+              - name: name
+                id: 4
+                slug: slug
+            name: name
+            id: 3
+            slug: slug
+            url: url
+          published_at: published_at
+          views: 5
+          likes: 5
+          dimensions: dimensions
+      properties:
+        total_count:
+          type: integer
+        items:
+          items:
+            $ref: '#/components/schemas/Object'
+          type: array
+      type: object
+    _users__username__following_get_200_response:
+      example:
+        total_count: 0
+        items:
+        - website: website
+          avatar_url: avatar_url
+          profile_url: profile_url
+          avatar_thumbnail_url: avatar_thumbnail_url
+          name: name
+          bio: bio
+          username: username
+        - website: website
+          avatar_url: avatar_url
+          profile_url: profile_url
+          avatar_thumbnail_url: avatar_thumbnail_url
+          name: name
+          bio: bio
+          username: username
+      properties:
+        total_count:
+          type: integer
+        items:
+          items:
+            $ref: '#/components/schemas/User'
+          type: array
+      type: object
+    _users__username__collections_get_200_response:
+      example:
+        total_count: 0
+        items:
+        - owner:
+            website: website
+            avatar_url: avatar_url
+            profile_url: profile_url
+            avatar_thumbnail_url: avatar_thumbnail_url
+            name: name
+            bio: bio
+            username: username
+          featured: true
+          public: true
+          name: name
+          created_at: created_at
+          description: description
+          cover_object:
+            archive_download_url: archive_download_url
+            complexity: 2
+            featured: featured
+            images:
+            - standard:
+                width: width
+                url: url
+                height: height
+              thumbnail:
+                width: width
+                url: url
+                height: height
+              original:
+                width: width
+                url: url
+                height: height
+              is_primary: true
+              id: 7
+            - standard:
+                width: width
+                url: url
+                height: height
+              thumbnail:
+                width: width
+                url: url
+                height: height
+              original:
+                width: width
+                url: url
+                height: height
+              is_primary: true
+              id: 7
+            visibility: visibility
+            description: description
+            designer:
+              website: website
+              avatar_url: avatar_url
+              profile_url: profile_url
+              avatar_thumbnail_url: avatar_thumbnail_url
+              name: name
+              bio: bio
+              username: username
+            url: url
+            material_quantity: material_quantity
+            tags:
+            - tags
+            - tags
+            licenses:
+            - type: type
+              value: true
+            - type: type
+              value: true
+            parent_id: 1
+            name: name
+            files:
+            - filename: filename
+              size: size
+              download_url: download_url
+              description: description
+              id: 9
+              thumbnail_url: thumbnail_url
+            - filename: filename
+              size: size
+              download_url: download_url
+              description: description
+              id: 9
+              thumbnail_url: thumbnail_url
+            id: 6
+            categories:
+            - parent:
+                name: name
+                id: 4
+                slug: slug
+              children:
+                total_count: 2
+                items:
+                - name: name
+                  id: 4
+                  slug: slug
+                - name: name
+                  id: 4
+                  slug: slug
+              name: name
+              id: 3
+              slug: slug
+              url: url
+            - parent:
+                name: name
+                id: 4
+                slug: slug
+              children:
+                total_count: 2
+                items:
+                - name: name
+                  id: 4
+                  slug: slug
+                - name: name
+                  id: 4
+                  slug: slug
+              name: name
+              id: 3
+              slug: slug
+              url: url
+            published_at: published_at
+            views: 5
+            likes: 5
+            dimensions: dimensions
+          id: 6
+          slug: slug
+          url: url
+        - owner:
+            website: website
+            avatar_url: avatar_url
+            profile_url: profile_url
+            avatar_thumbnail_url: avatar_thumbnail_url
+            name: name
+            bio: bio
+            username: username
+          featured: true
+          public: true
+          name: name
+          created_at: created_at
+          description: description
+          cover_object:
+            archive_download_url: archive_download_url
+            complexity: 2
+            featured: featured
+            images:
+            - standard:
+                width: width
+                url: url
+                height: height
+              thumbnail:
+                width: width
+                url: url
+                height: height
+              original:
+                width: width
+                url: url
+                height: height
+              is_primary: true
+              id: 7
+            - standard:
+                width: width
+                url: url
+                height: height
+              thumbnail:
+                width: width
+                url: url
+                height: height
+              original:
+                width: width
+                url: url
+                height: height
+              is_primary: true
+              id: 7
+            visibility: visibility
+            description: description
+            designer:
+              website: website
+              avatar_url: avatar_url
+              profile_url: profile_url
+              avatar_thumbnail_url: avatar_thumbnail_url
+              name: name
+              bio: bio
+              username: username
+            url: url
+            material_quantity: material_quantity
+            tags:
+            - tags
+            - tags
+            licenses:
+            - type: type
+              value: true
+            - type: type
+              value: true
+            parent_id: 1
+            name: name
+            files:
+            - filename: filename
+              size: size
+              download_url: download_url
+              description: description
+              id: 9
+              thumbnail_url: thumbnail_url
+            - filename: filename
+              size: size
+              download_url: download_url
+              description: description
+              id: 9
+              thumbnail_url: thumbnail_url
+            id: 6
+            categories:
+            - parent:
+                name: name
+                id: 4
+                slug: slug
+              children:
+                total_count: 2
+                items:
+                - name: name
+                  id: 4
+                  slug: slug
+                - name: name
+                  id: 4
+                  slug: slug
+              name: name
+              id: 3
+              slug: slug
+              url: url
+            - parent:
+                name: name
+                id: 4
+                slug: slug
+              children:
+                total_count: 2
+                items:
+                - name: name
+                  id: 4
+                  slug: slug
+                - name: name
+                  id: 4
+                  slug: slug
+              name: name
+              id: 3
+              slug: slug
+              url: url
+            published_at: published_at
+            views: 5
+            likes: 5
+            dimensions: dimensions
+          id: 6
+          slug: slug
+          url: url
+      properties:
+        total_count:
+          type: integer
+        items:
+          items:
+            $ref: '#/components/schemas/OneCollection'
+          type: array
+      type: object
+    _objects__object_id__files_get_200_response:
+      example:
+        total_count: 0
+        items:
+        - filename: filename
+          size: size
+          download_url: download_url
+          description: description
+          id: 9
+          thumbnail_url: thumbnail_url
+        - filename: filename
+          size: size
+          download_url: download_url
+          description: description
+          id: 9
+          thumbnail_url: thumbnail_url
+      properties:
+        total_count:
+          type: integer
+        items:
+          items:
+            $ref: '#/components/schemas/File'
+          type: array
+      type: object
+    _objects__object_id__prints_get_200_response:
+      example:
+        total_count: 0
+        items:
+        - standard:
+            width: width
+            url: url
+            height: height
+          thumbnail:
+            width: width
+            url: url
+            height: height
+          original:
+            width: width
+            url: url
+            height: height
+          id: 6
+        - standard:
+            width: width
+            url: url
+            height: height
+          thumbnail:
+            width: width
+            url: url
+            height: height
+          original:
+            width: width
+            url: url
+            height: height
+          id: 6
+      properties:
+        total_count:
+          type: integer
+        items:
+          items:
+            $ref: '#/components/schemas/Print'
+          type: array
+      type: object
+    _file_post_201_response:
+      example:
+        filename: filename
+      properties:
+        filename:
+          type: string
+      type: object
+    _categories_get_200_response:
+      example:
+        total_count: 0
+        items:
+        - parent:
+            name: name
+            id: 4
+            slug: slug
+          children:
+            total_count: 2
+            items:
+            - name: name
+              id: 4
+              slug: slug
+            - name: name
+              id: 4
+              slug: slug
+          objects:
+            total_count: 0
+            items:
+            - "{}"
+            - "{}"
+          name: name
+          id: 6
+          slug: slug
+          url: url
+        - parent:
+            name: name
+            id: 4
+            slug: slug
+          children:
+            total_count: 2
+            items:
+            - name: name
+              id: 4
+              slug: slug
+            - name: name
+              id: 4
+              slug: slug
+          objects:
+            total_count: 0
+            items:
+            - "{}"
+            - "{}"
+          name: name
+          id: 6
+          slug: slug
+          url: url
+      properties:
+        total_count:
+          type: integer
+        items:
+          items:
+            $ref: '#/components/schemas/Category'
+          type: array
+      type: object
+    Print_original:
+      example:
+        width: width
+        url: url
+        height: height
+      properties:
+        url:
+          type: string
+        width:
+          type: string
+        height:
+          type: string
+      type: object
+    Category_children_items_inner:
+      example:
+        name: name
+        id: 4
+        slug: slug
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        name:
+          type: string
+      type: object
+    Category_children:
+      example:
+        total_count: 2
+        items:
+        - name: name
+          id: 4
+          slug: slug
+        - name: name
+          id: 4
+          slug: slug
+      properties:
+        total_count:
+          type: integer
+        items:
+          items:
+            $ref: '#/components/schemas/Category_children_items_inner'
+          type: array
+      type: object
+  securitySchemes:
+    oauth_authorization_code:
+      description: OAuth 2.0 Authentication with Authentication code flow
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.myminifactory.com/web/authorize?client_id=example_client&redirect_uri=http://example.com/callback&response_type=code&state=RANDOM_STRING
+          scopes:
+            basic: |
+              to read any and all private data related to a user (e.g. profile info.)
+            download: |
+              to have download file download authorisations
+          tokenUrl: https://auth.myminifactory.com/v1/oauth/?client_id=example_client&redirect_uri=http://example.com/callback&response_type=code&state=RANDOM_STRING
+      type: oauth2
+    oauth_implicit:
+      description: OAuth 2.0 Authentication with Implicit flow
+      flows:
+        implicit:
+          authorizationUrl: https://auth.myminifactory.com/web/authorize?client_id=example_client&redirect_uri=http://example.com/callback&response_type=code&state=RANDOM_STRING
+          scopes:
+            basic: |
+              to read any and all private data related to a user (e.g. profile info.)
+            download: |
+              to have download file download authorisations
+      type: oauth2
+    key:
+      in: query
+      name: key
+      type: apiKey
+x-original-swagger-version: "2.0"
